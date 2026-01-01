@@ -22,114 +22,29 @@
 		onclick,
 		children
 	}: Props = $props();
+
+	const variantClasses: Record<string, string> = {
+		primary: 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white hover:from-indigo-600 hover:to-indigo-700 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30',
+		secondary: 'bg-slate-700 text-slate-100 border border-slate-600 hover:bg-slate-600',
+		danger: 'bg-red-500 text-white hover:bg-red-600',
+		ghost: 'bg-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-100'
+	};
+
+	const sizeClasses: Record<string, string> = {
+		sm: 'px-3 py-1.5 text-sm',
+		md: 'px-4 py-2 text-base',
+		lg: 'px-6 py-3 text-lg'
+	};
 </script>
 
 <button
 	{type}
-	class="btn btn-{variant} btn-{size} {className}"
+	class="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed {variantClasses[variant]} {sizeClasses[size]} {className}"
 	disabled={disabled || loading}
 	{onclick}
 >
 	{#if loading}
-		<span class="loader"></span>
+		<span class="w-4 h-4 border-2 border-transparent border-t-current rounded-full animate-spin"></span>
 	{/if}
-	<span class:loading>{@render children()}</span>
+	<span class:opacity-70={loading}>{@render children()}</span>
 </button>
-
-<style>
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
-		border: none;
-		border-radius: 10px;
-		font-family: inherit;
-		font-weight: 500;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		position: relative;
-	}
-
-	.btn:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
-
-	/* Variants */
-	.btn-primary {
-		background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-		color: white;
-	}
-
-	.btn-primary:hover:not(:disabled) {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
-	}
-
-	.btn-secondary {
-		background: var(--color-surface);
-		color: var(--color-text);
-		border: 1px solid var(--color-border);
-	}
-
-	.btn-secondary:hover:not(:disabled) {
-		background: var(--color-surface-hover);
-	}
-
-	.btn-danger {
-		background: var(--color-danger);
-		color: white;
-	}
-
-	.btn-danger:hover:not(:disabled) {
-		opacity: 0.9;
-	}
-
-	.btn-ghost {
-		background: transparent;
-		color: var(--color-text-muted);
-	}
-
-	.btn-ghost:hover:not(:disabled) {
-		background: var(--color-surface);
-		color: var(--color-text);
-	}
-
-	/* Sizes */
-	.btn-sm {
-		padding: 0.5rem 1rem;
-		font-size: 0.875rem;
-	}
-
-	.btn-md {
-		padding: 0.75rem 1.5rem;
-		font-size: 1rem;
-	}
-
-	.btn-lg {
-		padding: 1rem 2rem;
-		font-size: 1.125rem;
-	}
-
-	/* Loader */
-	.loader {
-		width: 16px;
-		height: 16px;
-		border: 2px solid transparent;
-		border-top-color: currentColor;
-		border-radius: 50%;
-		animation: spin 0.8s linear infinite;
-	}
-
-	.loading {
-		opacity: 0.7;
-	}
-
-	@keyframes spin {
-		to {
-			transform: rotate(360deg);
-		}
-	}
-</style>
-
