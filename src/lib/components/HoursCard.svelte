@@ -47,10 +47,10 @@
 		try {
 			const limit = 100;
 			
-			let allPeriods: { seconds: number; date_to_apply: string }[] = [];
+			let allPeriods: any[] = [];
 			let page = 1;
 			
-			// Buscar todos os períodos (API retorna os mais recentes)
+			// Buscar todos os períodos
 			while (true) {
 				const periods = await getManualWorkPeriods(credentials, {
 					user_id: userId,
@@ -63,12 +63,11 @@
 				page++;
 			}
 
-			// Detectar o mês mais recente dos lançamentos
 			if (allPeriods.length > 0) {
-				// Extrair mês/ano diretamente da string (evita problemas de timezone)
+				// Detectar o mês mais recente
 				const getMonthYear = (dateStr: string) => {
 					const [year, month] = dateStr.split('-').map(Number);
-					return { year, month: month - 1 }; // month é 0-indexed
+					return { year, month: month - 1 };
 				};
 				
 				const monthYears = allPeriods.map(p => getMonthYear(p.date_to_apply));
@@ -80,15 +79,19 @@
 				
 				displayMonth = `${monthNames[mostRecent.month]} ${mostRecent.year}`;
 				
-				// Filtrar apenas lançamentos do mês mais recente (comparação de strings)
 				const targetPrefix = `${mostRecent.year}-${String(mostRecent.month + 1).padStart(2, '0')}`;
 				const filteredPeriods = allPeriods.filter(p => p.date_to_apply.startsWith(targetPrefix));
 				
-				totalSeconds = filteredPeriods.reduce((sum, period) => sum + (period.seconds || 0), 0);
-				
-				// #region agent log
-				fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'HoursCard:fetchHours',message:'Hours loaded',data:{totalSeconds,periodsCount:filteredPeriods.length,allPeriodsCount:allPeriods.length,displayMonth,targetPrefix},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'FIX_FILTER'})}).catch(()=>{});
-				// #endregion
+				// Somar valores, ignorando negativos em stage "Doing" (são transferências internas)
+				totalSeconds = filteredPeriods.reduce((sum, period) => {
+					const seconds = period.seconds || 0;
+					const stage = period.board_stage_name || '';
+					// Ignorar registros negativos em "Doing" (transferências internas)
+					if (seconds < 0 && stage === 'Doing') {
+						return sum;
+					}
+					return sum + seconds;
+				}, 0);
 			} else {
 				displayMonth = 'Sem lançamentos';
 				totalSeconds = 0;

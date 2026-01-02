@@ -88,21 +88,7 @@ export async function getActivities(
 
 	const query = searchParams.toString();
 	const endpoint = `/activities${query ? `?${query}` : ''}`;
-	// #region agent log
-	fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'runrun.ts:getActivities',message:'Calling activities API',data:{endpoint,params,hasAppKey:!!credentials.appKey,hasUserToken:!!credentials.userToken},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'D,E,F'})}).catch(()=>{});
-	// #endregion
-	try {
-		const result = await apiRequest<Activity[]>(endpoint, credentials);
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'runrun.ts:getActivities',message:'Activities API success',data:{resultLength:result.length,firstItem:result[0]},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'D'})}).catch(()=>{});
-		// #endregion
-		return result;
-	} catch (err) {
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'runrun.ts:getActivities',message:'Activities API error',data:{error:String(err),endpoint},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'D,E,F'})}).catch(()=>{});
-		// #endregion
-		throw err;
-	}
+	return apiRequest<Activity[]>(endpoint, credentials);
 }
 
 export async function getTasks(
@@ -127,22 +113,11 @@ export async function getTasks(
 
 	const query = searchParams.toString();
 	const endpoint = `/tasks${query ? `?${query}` : ''}`;
-	// #region agent log
-	fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'runrun.ts:getTasks',message:'Calling tasks API',data:{endpoint,params},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'C'})}).catch(()=>{});
-	// #endregion
-	const result = await apiRequest<Task[]>(endpoint, credentials);
-	// #region agent log
-	fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'runrun.ts:getTasks',message:'Tasks API response',data:{resultLength:result.length,firstTask:result[0]?{id:result[0].id,title:result[0].title,state:result[0].state}:null},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'C'})}).catch(()=>{});
-	// #endregion
-	return result;
+	return apiRequest<Task[]>(endpoint, credentials);
 }
 
 export async function getCurrentUser(credentials: AuthCredentials): Promise<User> {
-	const user = await apiRequest<User>('/users/me', credentials);
-	// #region agent log
-	fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'runrun.ts:getCurrentUser',message:'User data from API',data:{user,userId:user.id,userIdType:typeof user.id},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'USER'})}).catch(()=>{});
-	// #endregion
-	return user;
+	return apiRequest<User>('/users/me', credentials);
 }
 
 export interface ManualWorkPeriod {
@@ -175,25 +150,7 @@ export async function getManualWorkPeriods(
 
 	const query = searchParams.toString();
 	const endpoint = `/manual_work_periods${query ? `?${query}` : ''}`;
-	
-	// #region agent log
-	fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'runrun.ts:getManualWorkPeriods',message:'Calling manual_work_periods API',data:{endpoint,params},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1,H2'})}).catch(()=>{});
-	// #endregion
-	
-	try {
-		const result = await apiRequest<ManualWorkPeriod[]>(endpoint, credentials);
-		// #region agent log
-		const allDates = result.map(r => r.date_to_apply).sort();
-		const uniqueDates = [...new Set(allDates)];
-		fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'runrun.ts:getManualWorkPeriods',message:'Manual work periods success',data:{count:result.length,uniqueDates,dateRange:{min:allDates[0],max:allDates[allDates.length-1]},firstFull:result[0],lastFull:result[result.length-1]},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H5,H6,H7'})}).catch(()=>{});
-		// #endregion
-		return result;
-	} catch (err) {
-		// #region agent log
-		fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'runrun.ts:getManualWorkPeriods',message:'Manual work periods error',data:{error:String(err)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
-		// #endregion
-		throw err;
-	}
+	return apiRequest<ManualWorkPeriod[]>(endpoint, credentials);
 }
 
 export async function validateCredentials(credentials: AuthCredentials): Promise<boolean> {
