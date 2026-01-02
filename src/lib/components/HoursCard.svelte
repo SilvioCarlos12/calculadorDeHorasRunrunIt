@@ -96,10 +96,6 @@
 			
 		} catch (e) {
 			error = 'Erro ao carregar horas';
-			console.error(e);
-			// #region agent log
-			fetch('http://127.0.0.1:7243/ingest/38ce56c4-b8ef-4daa-9e72-afa7deb0ee71',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'HoursCard:fetchHours',message:'Error',data:{error:String(e)},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'ERROR'})}).catch(()=>{});
-			// #endregion
 		} finally {
 			loading = false;
 		}

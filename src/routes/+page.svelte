@@ -40,7 +40,6 @@
 			}
 		} catch (e) {
 			error = 'Erro ao conectar com a API. Verifique suas credenciais.';
-			console.error(e);
 		} finally {
 			loading = false;
 		}

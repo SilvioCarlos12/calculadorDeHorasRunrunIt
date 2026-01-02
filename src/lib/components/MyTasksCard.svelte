@@ -62,7 +62,6 @@
 			allTasks = fetchedTasks;
 		} catch (e) {
 			error = 'Erro ao carregar tarefas';
-			console.error(e);
 		} finally {
 			loading = false;
 		}

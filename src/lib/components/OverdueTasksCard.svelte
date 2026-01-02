@@ -40,7 +40,6 @@
 			overdueTasks = allTasks.filter(isTaskOverdue);
 		} catch (e) {
 			error = 'Erro ao carregar tarefas';
-			console.error(e);
 		} finally {
 			loading = false;
 		}
