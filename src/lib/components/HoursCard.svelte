@@ -46,12 +46,11 @@
 
 		try {
 			const limit = 100;
-			
 			let allPeriods: any[] = [];
-			let page = 1;
+			let hasMore = true;
 			
-			// Buscar todos os períodos
-			while (true) {
+			// Buscar todos os períodos com paginação
+			for (let page = 1; hasMore; page++) {
 				const periods = await getManualWorkPeriods(credentials, {
 					user_id: userId,
 					limit,
@@ -59,8 +58,7 @@
 				});
 				
 				allPeriods = [...allPeriods, ...periods];
-				if (periods.length < limit) break;
-				page++;
+				hasMore = periods.length === limit;
 			}
 
 			if (allPeriods.length > 0) {
