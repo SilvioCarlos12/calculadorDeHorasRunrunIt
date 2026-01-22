@@ -2,8 +2,6 @@
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth';
 	import HoursCard from '$lib/components/HoursCard.svelte';
-	import OverdueTasksCard from '$lib/components/OverdueTasksCard.svelte';
-	import MyTasksCard from '$lib/components/MyTasksCard.svelte';
 
 	$effect(() => {
 		if (!$auth.isAuthenticated) {
@@ -27,8 +25,6 @@
 		if (hour < 18) return 'Boa tarde';
 		return 'Boa noite';
 	});
-
-	let activeTab = $state<'overview' | 'tasks'>('overview');
 </script>
 
 <svelte:head>
@@ -50,7 +46,7 @@
 					<h1 class="text-lg font-semibold text-slate-100">
 						{greeting()}, <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">{userName}</span>
 					</h1>
-					<p class="text-sm text-slate-400">Gerencie suas horas e tarefas</p>
+					<p class="text-sm text-slate-400">Gerencie suas horas trabalhadas</p>
 				</div>
 			</div>
 			
@@ -75,43 +71,13 @@
 				</button>
 			</div>
 		</div>
-
-		<!-- Nav tabs -->
-		<nav class="max-w-7xl mx-auto px-4 pb-3 flex gap-1">
-			<button 
-				class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all {activeTab === 'overview' ? 'bg-indigo-500 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-700'}"
-				onclick={() => activeTab = 'overview'}
-			>
-				<svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-					<path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-				</svg>
-				Resumo
-			</button>
-			<button 
-				class="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all {activeTab === 'tasks' ? 'bg-indigo-500 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-700'}"
-				onclick={() => activeTab = 'tasks'}
-			>
-				<svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
-					<path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-					<path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
-				</svg>
-				Minhas Tarefas
-			</button>
-		</nav>
 	</header>
 
 	<!-- Main -->
 	<main class="flex-1 px-4 py-6 max-w-7xl mx-auto w-full">
-		{#if activeTab === 'overview'}
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-				<HoursCard />
-				<OverdueTasksCard />
-			</div>
-		{:else}
-			<div class="max-w-4xl mx-auto">
-				<MyTasksCard />
-			</div>
-		{/if}
+		<div class="max-w-2xl mx-auto">
+			<HoursCard />
+		</div>
 	</main>
 
 	<!-- Footer -->
